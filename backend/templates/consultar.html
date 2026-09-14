@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clínica Rodríguez</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="bg-white border-bottom py-4 text-center">
+    <h1 class="fw-bold" style="color:#e07a5f;">Clínica Rodríguez</h1>
+    <p class="text-muted mb-0">Gestión de doctores</p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <div class="collapse navbar-collapse justify-content-center">
+        <ul class="navbar-nav gap-3">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ingresar">Ingresar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/consultar">Consultar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/actualizar">Actualizar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/eliminar">Eliminar doctor</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <h3 class="mb-4">Consultar doctor</h3>
+
+    <!-- Este formulario usa GET: al dar click en Consultar, la pagina se recarga
+         con el id elegido agregado en la propia direccion (ej: /consultar?doctor_id=abc123) -->
+    <form method="GET" action="/consultar" class="bg-white p-4 rounded shadow-sm mb-4" style="max-width: 500px;">
+      <div class="mb-3">
+        <label class="form-label">Selecciona el doctor</label>
+        <select name="doctor_id" class="form-select" required>
+          <option value="" selected disabled>-- elige un doctor --</option>
+          {% for d in doctores %}
+            <option value="{{ d._id }}">{{ d.nombre }} - {{ d.especialidad }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Consultar</button>
+    </form>
+
+    <!-- Cajas de texto deshabilitadas: solo para MOSTRAR datos, no se pueden editar aqui -->
+    <div class="bg-white p-4 rounded shadow-sm" style="max-width: 500px;">
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" value="{{ doctor.nombre if doctor else '' }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Especialidad</label>
+        <input type="text" class="form-control" value="{{ doctor.especialidad if doctor else '' }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" value="{{ doctor.email if doctor else '' }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Teléfono</label>
+        <input type="text" class="form-control" value="{{ doctor.telefono if doctor else '' }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" rows="3" disabled>{{ doctor.descripcion if doctor else '' }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Estado</label>
+        <input type="text" class="form-control" value="{{ doctor.estado if doctor else '' }}" disabled>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>
