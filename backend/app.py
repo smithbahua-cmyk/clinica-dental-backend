@@ -116,7 +116,7 @@ def guardar_cambios():
 # Muestra el combo con todos los doctores
 @app.route("/eliminar")
 def mostrar_eliminar():
-    lista = list(doctores.find())
+   lista = list(doctores.find().sort("nombre", 1))   # ← agregaste .sort("nombre", 1)
     return render_template("eliminar.html", doctores=lista)
 
 
