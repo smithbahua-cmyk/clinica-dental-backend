@@ -1,10 +1,69 @@
-from flask import render_template, request, redirect
+from datetime import date, time
+from flask import render_template, request, redirect, jsonify
 from bson.objectid import ObjectId
 
 
 def registrar_rutas_citas(app, db):
     citas = db["citas"]
     doctores = db["doctores"]  # lo necesitamos para llenar el combo de doctores
+
+    @app.after_request
+    def permitir_api_reservas(response):
+        # El formulario público está alojado en Netlify y consulta este backend.
+        if request.path in ("/api/doctores", "/api/reservas"):
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        return response
+
+    @app.route("/api/doctores")
+    def api_doctores():
+        lista = doctores.find({}, {"nombre": 1, "especialidad": 1, "estado": 1})
+        return jsonify([
+            {"id": str(d["_id"]), "nombre": d.get("nombre", ""),
+             "especialidad": d.get("especialidad", "")}
+            for d in lista if d.get("estado", "activo") == "activo"
+        ])
+
+    @app.route("/api/reservas", methods=["POST"])
+    def api_reservas():
+        datos = request.get_json(silent=True)
+        if not isinstance(datos, dict):
+            return jsonify({"mensaje": "Envía los datos de la cita en formato JSON."}), 400
+
+        campos = ("paciente_nombre", "paciente_email", "paciente_telefono",
+                  "doctor_id", "fecha", "hora", "motivo")
+        if any(not isinstance(datos.get(c), str) or not datos[c].strip() for c in campos):
+            return jsonify({"mensaje": "Completa todos los campos de la cita."}), 400
+
+        try:
+            fecha = date.fromisoformat(datos["fecha"].strip()).isoformat()
+            hora = time.fromisoformat(datos["hora"].strip()).strftime("%H:%M")
+        except ValueError:
+            return jsonify({"mensaje": "La fecha o la hora no es válida."}), 400
+
+        if not ObjectId.is_valid(datos["doctor_id"]):
+            return jsonify({"mensaje": "Selecciona un doctor válido."}), 400
+        doctor_id = ObjectId(datos["doctor_id"])
+        doctor = doctores.find_one({"_id": doctor_id})
+        if not doctor or doctor.get("estado", "activo") != "activo":
+            return jsonify({"mensaje": "Ese doctor no está disponible."}), 400
+
+        if citas.find_one({"doctor_id": doctor_id, "fecha": fecha, "hora": hora,
+                           "estado": {"$ne": "cancelada"}}):
+            return jsonify({"mensaje": "Ese horario ya está ocupado. Elige otro."}), 409
+
+        citas.insert_one({
+            "paciente_nombre": datos["paciente_nombre"].strip(),
+            "paciente_email": datos["paciente_email"].strip(),
+            "paciente_telefono": datos["paciente_telefono"].strip(),
+            "doctor_id": doctor_id,
+            "fecha": fecha,
+            "hora": hora,
+            "motivo": datos["motivo"].strip(),
+            "estado": "pendiente",
+        })
+        return jsonify({"mensaje": "Tu cita se registró correctamente."}), 201
 
     @app.route("/reservar")
     def mostrar_reservar():
