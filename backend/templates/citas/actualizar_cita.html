@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clínica Rodríguez</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="bg-white border-bottom py-4 text-center">
+    <h1 class="fw-bold" style="color:#e07a5f;">Clínica Rodríguez</h1>
+    <p class="text-muted mb-0">Gestión de citas</p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <div class="collapse navbar-collapse justify-content-center">
+        <ul class="navbar-nav gap-3">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ingresar">Ingresar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/consultar">Consultar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/actualizar">Actualizar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/eliminar">Eliminar doctor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/reservar">Reservar cita</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/actualizar-cita">Actualizar cita</a></li>
+          <li class="nav-item"><a class="nav-link" href="/mis-citas">Mis citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/panel-citas">Panel de citas</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <h3 class="mb-4">Actualizar cita</h3>
+
+    {% if citas|length == 0 %}
+      <p class="text-muted">No hay citas registradas todavía.</p>
+    {% else %}
+    <!-- Cada fila es su propio formulario: el boton "Guardar" de ESA fila
+         manda un POST a /guardar-cambios-cita solo con los datos de esa cita -->
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Paciente</th>
+            <th>Doctor</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in citas %}
+          <!-- Este formulario no tiene inputs adentro: los inputs de la fila lo
+               referencian desde afuera usando form="fila-{{ c._id }}" (esto es
+               valido en HTML5, permite que un input este fuera del <form>
+               pero se siga mandando junto con el, como si estuviera adentro). -->
+          <form id="fila-{{ c._id }}" method="POST" action="/guardar-cambios-cita">
+            <input type="hidden" name="cita_id" value="{{ c._id }}">
+          </form>
+          <tr>
+            <td>{{ c.paciente_nombre }}</td>
+            <td>{{ c.doctor_nombre }}</td>
+            <td style="min-width: 150px;">
+              <input type="date" name="fecha" form="fila-{{ c._id }}" class="form-control form-control-sm" value="{{ c.fecha }}" required>
+            </td>
+            <td style="min-width: 120px;">
+              <input type="time" name="hora" form="fila-{{ c._id }}" class="form-control form-control-sm" value="{{ c.hora }}" required>
+            </td>
+            <td style="min-width: 150px;">
+              <select name="estado" form="fila-{{ c._id }}" class="form-select form-select-sm">
+                <option value="pendiente" {% if c.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="confirmada" {% if c.estado == 'confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="atendida" {% if c.estado == 'atendida' %}selected{% endif %}>Atendida</option>
+                <option value="cancelada" {% if c.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+              </select>
+            </td>
+            <td>
+              <button type="submit" form="fila-{{ c._id }}" class="btn btn-primary btn-sm w-100">Guardar</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  </main>
+
+</body>
+</html>
