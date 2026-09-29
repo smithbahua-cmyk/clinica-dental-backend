@@ -9,25 +9,113 @@
 
   <style>
     /* Barra y submenús de navegación. */
-    .clinic-nav { position: relative; z-index: 100; background: #000; color: #fff; }
-    .clinic-menu, .clinic-submenu { list-style: none; margin: 0; padding: 0; }
-    .clinic-menu { display: flex; justify-content: center; max-width: 1140px; margin: auto; }
-    .clinic-menu > li { position: relative; }
-    .clinic-nav a, .clinic-nav summary { display: block; padding: 18px 30px; color: #fff; text-decoration: none; font: inherit; font-size: 18px; cursor: pointer; }
-    .clinic-nav summary { list-style: none; }
-    .clinic-nav summary::-webkit-details-marker { display: none; }
-    .clinic-nav summary::after { content: '▾'; margin-left: 10px; display: inline-block; }
-    .clinic-nav details[open] > summary::after { transform: rotate(180deg); }
-    .clinic-nav a:hover, .clinic-nav summary:hover, .clinic-nav details[open] > summary { background: #292929; }
-    .clinic-nav a:focus-visible, .clinic-nav summary:focus-visible { outline: 3px solid #e07a5f; outline-offset: -3px; }
-    .clinic-nav [aria-current="page"] { background: #292929; box-shadow: inset 0 -3px #e07a5f; }
-    .clinic-submenu { position: absolute; top: 100%; left: 0; min-width: 230px; background: #000; box-shadow: 0 8px 16px #0003; }
-    .clinic-submenu a { padding: 14px 24px; font-size: 16px; white-space: nowrap; }
+    .clinic-nav {
+      position: relative;
+      z-index: 100;
+      background: #000;
+      color: #fff;
+    }
+
+    .clinic-menu,
+    .clinic-submenu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .clinic-menu {
+      display: flex;
+      justify-content: center;
+      max-width: 1140px;
+      margin: auto;
+    }
+
+    .clinic-menu>li {
+      position: relative;
+    }
+
+    .clinic-nav a,
+    .clinic-nav summary {
+      display: block;
+      padding: 18px 30px;
+      color: #fff;
+      text-decoration: none;
+      font: inherit;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .clinic-nav summary {
+      list-style: none;
+    }
+
+    .clinic-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .clinic-nav summary::after {
+      content: '▾';
+      margin-left: 10px;
+      display: inline-block;
+    }
+
+    .clinic-nav details[open]>summary::after {
+      transform: rotate(180deg);
+    }
+
+    .clinic-nav a:hover,
+    .clinic-nav summary:hover,
+    .clinic-nav details[open]>summary {
+      background: #292929;
+    }
+
+    .clinic-nav a:focus-visible,
+    .clinic-nav summary:focus-visible {
+      outline: 3px solid #e07a5f;
+      outline-offset: -3px;
+    }
+
+    .clinic-nav [aria-current="page"] {
+      background: #292929;
+      box-shadow: inset 0 -3px #e07a5f;
+    }
+
+    .clinic-submenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 230px;
+      background: #000;
+      box-shadow: 0 8px 16px #0003;
+    }
+
+    .clinic-submenu a {
+      padding: 14px 24px;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+
     @media (max-width: 600px) {
-      .clinic-menu { flex-direction: column; }
-      .clinic-nav a, .clinic-nav summary { padding: 14px 22px; }
-      .clinic-submenu { position: static; min-width: 0; box-shadow: none; background: #151515; }
-      .clinic-submenu a { padding-left: 42px; white-space: normal; }
+      .clinic-menu {
+        flex-direction: column;
+      }
+
+      .clinic-nav a,
+      .clinic-nav summary {
+        padding: 14px 22px;
+      }
+
+      .clinic-submenu {
+        position: static;
+        min-width: 0;
+        box-shadow: none;
+        background: #151515;
+      }
+
+      .clinic-submenu a {
+        padding-left: 42px;
+        white-space: normal;
+      }
     }
   </style>
 </head>
@@ -69,7 +157,8 @@
 
   <main class="container py-5 text-center">
     <h3>Bienvenido</h3>
-    <p class="text-muted">Usa el menú de arriba para ingresar, consultar, actualizar o eliminar doctores.</p>
+    <p class="text-muted">Sistema desplegado en Azure - Usa el menú de arriba para ingresar, consultar, actualizar o
+      eliminar doctores.</p>
   </main>
 
 
