@@ -1,0 +1,7 @@
+{% extends 'base_personal.html' %}{% block contenido %}
+<div class="d-flex flex-wrap justify-content-between gap-3 mb-4"><div><h2>Historial de citas</h2><p class="text-muted mb-0">Cita: {{ cita._id }} · {{ cita.paciente_nombre }}</p></div><a class="btn btn-outline-secondary align-self-start" href="/panel-citas">Volver al panel</a></div>
+<div class="table-responsive bg-white p-3 rounded shadow-sm"><table class="table table-bordered align-middle"><thead class="table-light"><tr><th>CITA</th><th>PACIENTE</th><th>FECHA DE LA CITA</th><th>FECHA HORA MODIFICACIÓN</th><th>USUARIO</th><th>NOMBRE EMPLEADO</th><th>OBSERVACIÓN</th><th>STATUS</th></tr></thead><tbody>
+{% for e in eventos %}<tr><td style="overflow-wrap:anywhere;min-width:150px">{{ e.cita_id }}</td><td>{{ e.paciente }}</td><td class="text-nowrap">{{ e.fecha_cita[8:10] }}/{{ e.fecha_cita[5:7] }}/{{ e.fecha_cita[:4] }} {{ e.fecha_cita[11:] }}</td><td class="text-nowrap">{{ e.fecha_modificacion|hora_lima }}</td><td>{{ e.usuario }}</td><td>{{ e.nombre_empleado }}</td><td>{{ e.observacion }}</td><td>{{ e.status }}</td></tr>
+{% else %}<tr><td colspan="8" class="text-muted">Esta cita todavía no tiene eventos de auditoría registrados.</td></tr>{% endfor %}
+</tbody></table></div><p class="text-muted mt-3">Horario de Lima (24 horas). El historial registra las acciones realizadas desde la incorporación de la auditoría; no reconstruye cambios anteriores.</p>
+{% endblock %}

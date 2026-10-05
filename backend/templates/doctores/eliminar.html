@@ -1,71 +1,6 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clínica Rodríguez</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    /* Barra y submenús de navegación. */
-    .clinic-nav { position: relative; z-index: 100; background: #000; color: #fff; }
-    .clinic-menu, .clinic-submenu { list-style: none; margin: 0; padding: 0; }
-    .clinic-menu { display: flex; justify-content: center; max-width: 1140px; margin: auto; }
-    .clinic-menu > li { position: relative; }
-    .clinic-nav a, .clinic-nav summary { display: block; padding: 18px 30px; color: #fff; text-decoration: none; font: inherit; font-size: 18px; cursor: pointer; }
-    .clinic-nav summary { list-style: none; }
-    .clinic-nav summary::-webkit-details-marker { display: none; }
-    .clinic-nav summary::after { content: '▾'; margin-left: 10px; display: inline-block; }
-    .clinic-nav details[open] > summary::after { transform: rotate(180deg); }
-    .clinic-nav a:hover, .clinic-nav summary:hover, .clinic-nav details[open] > summary { background: #292929; }
-    .clinic-nav a:focus-visible, .clinic-nav summary:focus-visible { outline: 3px solid #e07a5f; outline-offset: -3px; }
-    .clinic-nav [aria-current="page"] { background: #292929; box-shadow: inset 0 -3px #e07a5f; }
-    .clinic-submenu { position: absolute; top: 100%; left: 0; min-width: 230px; background: #000; box-shadow: 0 8px 16px #0003; }
-    .clinic-submenu a { padding: 14px 24px; font-size: 16px; white-space: nowrap; }
-    @media (max-width: 600px) {
-      .clinic-menu { flex-direction: column; }
-      .clinic-nav a, .clinic-nav summary { padding: 14px 22px; }
-      .clinic-submenu { position: static; min-width: 0; box-shadow: none; background: #151515; }
-      .clinic-submenu a { padding-left: 42px; white-space: normal; }
-    }
-  </style>
-</head>
-<body class="bg-light">
-
-  <div class="bg-white border-bottom py-4 text-center">
-    <h1 class="fw-bold" style="color:#e07a5f;">Clínica Rodríguez</h1>
-    <p class="text-muted mb-0">Gestión de doctores</p>
-  </div>
-
-  <nav class="clinic-nav" aria-label="Navegación principal">
-    <ul class="clinic-menu">
-      <li><a href="/">Inicio</a></li>
-      <li>
-        <details>
-          <summary>Doctores</summary>
-          <ul class="clinic-submenu">
-            <li><a href="/ingresar">Ingresar doctor</a></li>
-            <li><a href="/consultar">Consultar doctor</a></li>
-            <li><a href="/actualizar">Actualizar doctor</a></li>
-            <li><a href="/eliminar" aria-current="page">Eliminar doctor</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>Citas</summary>
-          <ul class="clinic-submenu">
-            <li><a href="/reservar">Reservar cita</a></li>
-            <li><a href="/actualizar-cita">Actualizar cita</a></li>
-            <li><a href="/mis-citas">Mis citas</a></li>
-            <li><a href="/panel-citas">Panel de citas</a></li>
-          </ul>
-        </details>
-      </li>
-    </ul>
-  </nav>
-
-  <main class="container py-5">
+{% extends 'base_personal.html' %}
+{% block clase_contenedor %}container py-5{% endblock %}
+{% block contenido %}
     <h3 class="mb-4">Eliminar doctor</h3>
 
     {% if doctores|length == 0 %}
@@ -73,7 +8,7 @@
     {% else %}
     <!-- Al dar click en Eliminar, se manda un POST a /eliminar-doctor con el id elegido en el combo -->
     <form method="POST" action="/eliminar-doctor" class="bg-white p-4 rounded shadow-sm" style="max-width: 500px;"
-          onsubmit="return confirm('¿Seguro que deseas eliminar este doctor?');">
+          onsubmit="return confirm('¿Seguro que deseas eliminar este doctor?');"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="mb-3">
         <label class="form-label">Selecciona el doctor</label>
@@ -89,36 +24,4 @@
     </form>
     {% endif %}
 
-  </main>
-
-
-  <script>
-    // Clic o Enter abre el menú; también se abre al pasar el mouse en PC.
-    (() => {
-      const nav = document.querySelector('.clinic-nav');
-      const menus = [...nav.querySelectorAll('details')];
-      const hover = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 601px)');
-      function closeOthers(current) {
-        menus.forEach(menu => { if (menu !== current) menu.open = false; });
-      }
-      menus.forEach(menu => {
-        menu.addEventListener('toggle', () => { if (menu.open) closeOthers(menu); });
-        menu.addEventListener('mouseenter', () => {
-          if (hover.matches) { closeOthers(menu); menu.open = true; }
-        });
-        menu.addEventListener('mouseleave', () => {
-          if (hover.matches && !menu.contains(document.activeElement)) menu.open = false;
-        });
-      });
-      document.addEventListener('click', event => { if (!nav.contains(event.target)) closeOthers(null); });
-      nav.addEventListener('focusout', event => { if (!nav.contains(event.relatedTarget)) closeOthers(null); });
-      nav.addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
-          const openMenu = menus.find(menu => menu.open);
-          if (openMenu) { openMenu.open = false; openMenu.querySelector('summary').focus(); }
-        }
-      });
-    })();
-  </script>
-</body>
-</html>
+  {% endblock %}

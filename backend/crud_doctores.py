@@ -10,10 +10,8 @@ Requisitos:
 Configuracion:
     1. Crea un archivo llamado ".env" en la misma carpeta que este script.
     2. Dentro escribe una sola linea asi (con TU connection string real):
-       MONGO_URI=mongodb+srv://usuario:password@cluster0.xxxxx.mongodb.net/
     3. Ese archivo .env NO se sube a GitHub (agregalo a tu .gitignore).
 """
-#el archivo .env tiene dentro MONGO_URI=mongodb+srv://aronvaldez282_db_user:i80FSJ0hnIAiSUPH@cluster0.gpbr6yh.mongodb.net/?appName=Cluster0
 import os #te permite acceder a variables del sistema operativo (la usamos para leer el .env)
 import sys #te permite, entre otras cosas, cerrar el programa de forma controlada (sys.exit()).
 from dotenv import load_dotenv #lee tu archivo .env y carga lo que hay adentro como si fueran variables del sistema.
